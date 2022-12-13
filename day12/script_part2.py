@@ -1,4 +1,6 @@
 
+import numpy as np
+
 mat = []
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -26,6 +28,7 @@ edges = {}
 dist = {}
 prev = {}
 
+
 for i in range(len(mat)):
     for j in range(len(mat[i])):
         edges[(i, j)] = []
@@ -47,6 +50,7 @@ for i in range(len(mat)):
 dist[end] = 0
 Q = set(vertices)
 
+
 while Q:
     u = min(Q, key=lambda x: dist[x])
     Q.remove(u)
@@ -56,10 +60,24 @@ while Q:
             dist[v] = alt
             prev[v] = u
 
-S = []
-u = start
-while u is not None:
-    S.insert(0, u)
-    u = prev[u]
 
-print(len(S) - 1)
+mat = np.array(mat)
+sizes = {}
+
+shortest_path = None
+
+for i, j in zip(*np.where(mat == 0)):
+    
+    S = []
+    u = (i, j)
+    while u is not None:
+        S.insert(0, u)
+        u = prev[u]
+
+    if len(S) > 1:
+        if shortest_path is None:
+            shortest_path = len(S) - 1
+        elif len(S) - 1 < shortest_path:
+            shortest_path = len(S) - 1
+
+print(shortest_path)
